@@ -8,19 +8,29 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
+import { Form, HasError, AlertError } from 'vform';
+
+window.Form = Form;
+Vue.component(HasError.name, HasError);
+Vue.component(AlertError.name, AlertError);
+
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
 
 let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
     { path: '/users', component: require('./components/Users.vue').default }
-  ]
+];
 
 const router = new VueRouter({
     mode: 'history',
     routes // short for `routes: routes`
-  })
+});
+
+Vue.filter('upChar', function(val) {
+    return val.charAt(0).toUpperCase() + val.slice(1)
+})
 
 /**
  * The following block of code may be used to automatically register your
