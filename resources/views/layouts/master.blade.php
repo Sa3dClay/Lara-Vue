@@ -130,6 +130,8 @@
           
           <router-view></router-view>
 
+          <vue-progress-bar></vue-progress-bar>
+
         </div><!-- end container-fluid -->
       </div>
       <!-- End Main Content -->

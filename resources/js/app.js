@@ -4,33 +4,67 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require('./bootstrap')
 
-window.Vue = require('vue');
+window.Vue = require('vue')
 
-import { Form, HasError, AlertError } from 'vform';
+// vFrom
+import { Form, HasError, AlertError } from 'vform'
+window.Form = Form
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
 
-window.Form = Form;
-Vue.component(HasError.name, HasError);
-Vue.component(AlertError.name, AlertError);
+// SweetAlert2
+import Swal from 'sweetalert2'
+window.Swal = Swal
 
-import VueRouter from 'vue-router';
-Vue.use(VueRouter);
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+window.Toast = Toast
+
+// VueRouter
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 
 let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
     { path: '/users', component: require('./components/Users.vue').default }
-];
+]
 
 const router = new VueRouter({
     mode: 'history',
     routes // short for `routes: routes`
 });
 
+// Event
+window.Fire = new Vue()
+
+// VueProgressBar
+import VueProgressBar from 'vue-progressbar'
+const options = {
+    color: '#3498db',
+    failedColor: '#874b4b',
+    thickness: '4px',
+    transition: {
+      speed: '0.4s',
+      opacity: '0.6s',
+      termination: 300
+    },
+    autoRevert: true,
+    location: 'top',
+    inverse: false
+}
+Vue.use(VueProgressBar, options)
+
+// Vue global filter
 Vue.filter('upChar', function(val) {
     return val.charAt(0).toUpperCase() + val.slice(1)
-})
+});
 
 /**
  * The following block of code may be used to automatically register your

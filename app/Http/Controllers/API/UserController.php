@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -83,6 +84,21 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $currentUser = Auth::user();
+        $user = User::findOrFail($id);
+
+        // return ['message' => $currentUser]; /* this returns null! */
+
+        // if($currentUser->id == $user->id) {
+        //     return ['message' => `can't delete the current user`];
+
+        // } else {
+        //     // $user->delete();
+        
+        //     return ['message' => 'User deleted successfuly'];
+        // }
+
+        $user->delete();
+        return ['message' => 'User deleted successfuly'];
     }
 }

@@ -38,7 +38,7 @@
                                             <i class="fa fa-edit text-green"></i>
                                         </a>
                                         |
-                                        <a href="#">
+                                        <a href="#" @click="deleteUser(user.id)">
                                             <i class="fa fa-trash text-red"></i>
                                         </a>
                                     </td>
@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import { setInterval } from 'timers';
     export default {
         data() {
             return {
@@ -134,16 +135,83 @@
             }
         },
         methods: {
-            createUser() {
-                this.form.post('api/user');
+            loadUsers() {
+                axios.get("api/user").then( ({ data }) => (this.users = data.data) )
             },
 
-            loadUsers() {
-                axios.get("api/user").then( ({ data }) => (this.users = data.data) );
+            createUser() {
+                this.$Progress.start()
+
+                this.form.post('api/user')
+                    .then(() => {
+                        $('#addNew').modal('hide')
+
+                        this.$Progress.finish()
+
+                        Toast.fire({
+                            type: 'success',
+                            title: 'User created successfully'
+                        })
+
+                        // Create event
+                        Fire.$emit('AfterModify')
+
+                        // this.loadUsers()
+                    })
+                    .catch(() => {
+                        this.$Progress.fail()
+
+                        Toast.fire({
+                            type: 'error',
+                            title: 'Something went wrong!'
+                        })
+                    })
+            },
+
+            deleteUser(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+
+                        // Send request to the server
+                        this.form.delete('api/user/'+id)
+                            .then(() => {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'User has been deleted.',
+                                    'success'
+                                )
+
+                                Fire.$emit('AfterModify')
+                            })
+                            .catch(() => {
+                                Swal.fire(
+                                    'Oobs...',
+                                    'User hasn not been deleted!',
+                                    'error'
+                                )
+                            })
+                    }
+                })
             }
         },
         created() {
-            this.loadUsers();
+            this.$Progress.start()
+            this.loadUsers()
+            this.$Progress.finish()
+
+            // Call event
+            Fire.$on( 'AfterModify', () => this.loadUsers() )
+
+            // Call this function every 4 seconds
+            // setInterval( () => this.loadUsers(), 4000 )
         }
     }
 </script>
