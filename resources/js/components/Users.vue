@@ -8,7 +8,8 @@
                         <h4>Users</h4>
                         
                         <div class="card-tools">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#addNew"><i class="fas fa-user-plus"></i> Add New</button>
+                            <!-- data-toggle="modal" data-target="#addNew" -->
+                            <button class="btn btn-success" @click="newModal"><i class="fas fa-user-plus"></i> Add New</button>
                         </div>
                     </div>
 
@@ -34,7 +35,7 @@
                                     <td>{{ user.type | upChar }}</td>
                                     <td>{{ user.created_at }}</td>
                                     <td>
-                                        <a href="#">
+                                        <a href="#" @click="editModal(user)">
                                             <i class="fa fa-edit text-green"></i>
                                         </a>
                                         |
@@ -55,13 +56,14 @@
                         <div class="modal-content">
 
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addNewLabel">User Info</h5>
+                                <h5 v-show="!editMode" class="modal-title" id="addNewLabel">Add User</h5>
+                                <h5 v-show="editMode" class="modal-title" id="addNewLabel">Edit User</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
 
-                            <form @submit.prevent="createUser">
+                            <form @submit.prevent="editMode ? updateUser() : createUser()">
                                 <div class="modal-body">
                                     
                                     <div class="form-group">
@@ -104,7 +106,9 @@
 
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <!-- Update & Create -->
+                                    <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
+                                    <button v-show="editMode"  type="submit" class="btn btn-success">Update</button>
                                 </div>
                             </form>
 
@@ -122,7 +126,10 @@ import { setInterval } from 'timers';
     export default {
         data() {
             return {
+                editMode: false,
+
                 form: new Form({
+                    id      : '',
                     name    : '',
                     email   : '',
                     password: '',
@@ -135,8 +142,47 @@ import { setInterval } from 'timers';
             }
         },
         methods: {
+            newModal() {
+                this.editMode = false
+                // this.form.clear()
+                this.form.reset()
+                $('#addNew').modal('show')
+            },
+
+            editModal(user) {
+                this.editMode = true
+
+                this.form.reset()
+                $('#addNew').modal('show')
+
+                this.form.fill(user)
+            },
+
             loadUsers() {
                 axios.get("api/user").then( ({ data }) => (this.users = data.data) )
+            },
+
+            updateUser() {
+                // console.log('Editing')
+                this.$Progress.start()
+
+                this.form.put('api/user/'+this.form.id)
+                    .then(() => {
+                        $('#addNew').modal('hide')
+
+                        this.$Progress.finish()
+
+                        Toast.fire({
+                            type: 'success',
+                            title: 'User updated successfully'
+                        })
+
+                        // Create event
+                        Fire.$emit('AfterModify')
+                    })
+                    .catch(() => {
+                        this.$Progress.fail()
+                    })
             },
 
             createUser() {
@@ -178,8 +224,8 @@ import { setInterval } from 'timers';
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
-                    if (result.value) {
 
+                    if (result.value) {
                         // Send request to the server
                         this.form.delete('api/user/'+id)
                             .then(() => {
@@ -202,6 +248,7 @@ import { setInterval } from 'timers';
                 })
             }
         },
+
         created() {
             this.$Progress.start()
             this.loadUsers()
