@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
+
+        <div class="row justify-content-center" v-if="$gate.isAdminOrAuthor()">
             <div class="col-md-12">
 
                 <div class="card mt-4">
@@ -28,7 +29,7 @@
                             </thead>
 
                             <tbody>
-                                <tr v-for="user in users" :key="user.id">
+                                <tr v-for="user in users.data" :key="user.id">
                                     <th scope="row">{{ user.id }}</th>
                                     <td>{{ user.name }}</td>
                                     <td>{{ user.email }}</td>
@@ -47,6 +48,13 @@
                             </tbody>
                         </table><!-- end of the table -->
 
+                    </div>
+
+                    <div class="card-footer">
+                        <pagination :data="users" @pagination-change-page="getUsers">
+                            <span slot="prev-nav"><i class="fas fa-chevron-left"></i></span>
+	                        <span slot="next-nav"><i class="fas fa-chevron-right"></i></span>
+                        </pagination>
                     </div>
                 </div><!-- end of card -->
 
@@ -118,6 +126,11 @@
 
             </div>
         </div>
+
+        <div v-if="!$gate.isAdminOrAuthor()">
+            <not-found></not-found>
+        </div>
+
     </div>
 </template>
 
@@ -146,6 +159,7 @@ import { setInterval } from 'timers';
                 this.editMode = false
                 // this.form.clear()
                 this.form.reset()
+
                 $('#addNew').modal('show')
             },
 
@@ -159,7 +173,17 @@ import { setInterval } from 'timers';
             },
 
             loadUsers() {
-                axios.get("api/user").then( ({ data }) => (this.users = data.data) )
+                if( this.$gate.isAdminOrAuthor() ) {
+                    axios.get("api/user")
+                        .then( ({ data }) => (this.users = data) )
+                }
+            },
+
+            getUsers(page = 1) {
+                axios.get('api/user?page=' + page)
+                    .then(response => {
+                        this.users = response.data
+                    })
             },
 
             updateUser() {
@@ -177,7 +201,7 @@ import { setInterval } from 'timers';
                             title: 'User updated successfully'
                         })
 
-                        // Create event
+                        // Call event
                         Fire.$emit('AfterModify')
                     })
                     .catch(() => {
@@ -199,10 +223,8 @@ import { setInterval } from 'timers';
                             title: 'User created successfully'
                         })
 
-                        // Create event
+                        // Call event
                         Fire.$emit('AfterModify')
-
-                        // this.loadUsers()
                     })
                     .catch(() => {
                         this.$Progress.fail()
@@ -254,8 +276,23 @@ import { setInterval } from 'timers';
             this.loadUsers()
             this.$Progress.finish()
 
-            // Call event
+            // Create event
             Fire.$on( 'AfterModify', () => this.loadUsers() )
+
+            Fire.$on('searching', () => {
+                let query = this.$parent.search
+
+                axios.get('api/findUser?q=' + query)
+                    .then((data) => {
+                        this.users = data.data
+                    })
+                    .catch(() => {
+                        Toast.fire({
+                            type: 'error',
+                            title: 'Can not be found'
+                        })
+                    })
+            })
 
             // Call this function every 4 seconds
             // setInterval( () => this.loadUsers(), 4000 )

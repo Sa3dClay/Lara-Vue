@@ -28,7 +28,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::latest()->paginate(10);
+        // $this->authorize('isAdmin');
+
+        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+            return User::first()->paginate(5);
+        }
     }
 
     /**
@@ -97,7 +101,7 @@ class UserController extends Controller
             $request->merge(['photo' => $name]);
 
             $userPhoto = public_path('img/profile/').$currentPhoto;
-            if(file_exists($userPhoto)){
+            if(file_exists($userPhoto) && $currentPhoto != "p.png"){
                 @unlink($userPhoto);
             }
         }
@@ -140,6 +144,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
+
         $currentUser = auth('api')->user();
         $user = User::findOrFail($id);
 
@@ -157,5 +163,31 @@ class UserController extends Controller
 
         // $user->delete();
         // return ['message' => 'User deleted successfully'];
+    }
+
+    public function search() {
+
+        if($search = \Request::get('q')) {
+
+            $users = User::where(function($query) use ($search){
+                $query->where('bio'  , 'LIKE', "%$search%")
+                    ->orWhere('name' , 'LIKE', "%$search%")
+                    ->orWhere('type' , 'LIKE', "%$search%")
+                    ->orWhere('email', 'LIKE', "%$search%");
+            })->paginate(20);
+
+            if( count($users) > 0 ) {
+                return $users;
+            } else {
+                return response()->json(['message' => 'can not be found'], 403);
+            }
+            
+        } else {
+            // return response()->json(['message' => 'no data entered'], 403);
+
+            $users = User::first()->paginate(5);
+            return $users;
+        }
+
     }
 }

@@ -13,8 +13,8 @@
                 <div class="card card-widget widget-user">
                     <!-- Add the bg color to the header using any of the bg-* classes -->
                     <div class="widget-user-header text-white" style="background-image:url('./img/vector.jpg')">
-                        <h3 class="widget-user-username">Name</h3>
-                        <h5 class="widget-user-desc">Web Designer</h5>
+                        <h3 class="widget-user-username">{{form.name}}</h3>
+                        <h5 class="widget-user-desc">{{form.bio}}</h5>
                     </div>
                     <div class="widget-user-image">
                         <img class="img-circle" :src="getProfilePath()" alt="User Avatar">
@@ -176,7 +176,19 @@
             },
 
             getProfilePath() {
-                return "/img/profile/" + this.form.photo
+                // return "/img/profile/" + this.form.photo
+
+                let photo = "/img/profile/p.png"
+                
+                if (this.form.photo) {
+                    if (this.form.photo.indexOf('base64') != -1) {
+                        photo = this.form.photo
+                    } else {
+                        photo = "/img/profile/" + this.form.photo
+                    }
+                }
+
+                return photo
             },
 
             updateProfile() {

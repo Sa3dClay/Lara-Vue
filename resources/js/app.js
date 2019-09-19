@@ -5,14 +5,18 @@
  */
 
 require('./bootstrap')
-
 window.Vue = require('vue')
+
+import Gate from "./Gate"
+Vue.prototype.$gate = new Gate(window.user)
 
 // vFrom
 import { Form, HasError, AlertError } from 'vform'
 window.Form = Form
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 // SweetAlert2
 import Swal from 'sweetalert2'
@@ -34,7 +38,8 @@ let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
     { path: '/developer', component: require('./components/Developer.vue').default },
     { path: '/profile', component: require('./components/Profile.vue').default },
-    { path: '/users', component: require('./components/Users.vue').default }
+    { path: '/users', component: require('./components/Users.vue').default },
+    { path: '*', component: require('./components/NotFound.vue').default }
 ]
 
 const router = new VueRouter({
@@ -101,8 +106,26 @@ Vue.component(
     require('./components/passport/PersonalAccessTokens.vue').default
 );
 
+Vue.component(
+    'not-found',
+    require('./components/NotFound.vue').default
+);
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    
+    data: {
+        search: ''
+    },
+
+    methods: {
+        searchFor: _.debounce(() => {
+            Fire.$emit('searching')
+        }, 1000),
+
+        printMe() {
+            window.print()
+        }
+    }
 });

@@ -27,12 +27,16 @@
       <!-- SEARCH FORM -->
       <form class="form-inline ml-3">
         <div class="input-group input-group-sm">
-          <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+
+          <input class="form-control form-control-navbar" type="search" v-model="search" @keyup.passive="searchFor" placeholder="Search" aria-label="Search">
+          {{-- @keyup.enter.prevent="searchFor" --}}
+
           <div class="input-group-append">
-            <button class="btn btn-navbar" type="submit">
+            <button class="btn btn-navbar" @click.prevent="searchFor">
               <i class="fa fa-search"></i>
             </button>
           </div>
+
         </div>
       </form>
 
@@ -81,6 +85,7 @@
               </router-link>
             </li>
 
+            @can('isAdmin')
             <li class="nav-item">
               <router-link to="/developer" class="nav-link">
                 <i class="nav-icon fas fa-cogs text-orange"></i>
@@ -108,6 +113,7 @@
 
               </ul>
             </li>
+            @endcan
 
             <li class="nav-item">
               <a class="nav-link" href="{{ route('logout') }}"
@@ -150,6 +156,9 @@
     <footer class="main-footer">
       <!-- To the right -->
       <div class="float-right d-none d-sm-inline">
+        <button class="btn btn-success" @click.prevent="printMe" style="margin-right: 8px;">
+          <i class="fa fa-print"></i> Print
+        </button>
         Anything you want
       </div>
       <!-- Default to the left -->
@@ -157,6 +166,13 @@
     </footer>
   </div>
   <!-- ./wrapper -->
+
+  <!-- auth -->
+  @auth
+    <script>
+      window.user = @json(auth()->user())
+    </script>
+  @endauth
 
   <!-- REQUIRED SCRIPTS -->
   <script src="/js/app.js"></script>
