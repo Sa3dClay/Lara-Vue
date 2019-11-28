@@ -9,6 +9,7 @@
 
   <title>Lara Vue</title>
 
+  <link rel="icon" href="/img/logo.png">
   <link rel="stylesheet" href="/css/app.css">
 </head>
 
@@ -82,6 +83,13 @@
               <router-link to="/profile" class="nav-link">
                 <i class="nav-icon fas fa-user text-purple"></i>
                 <p>Profile</p>
+              </router-link>
+            </li>
+
+            <li class="nav-item">
+              <router-link to="/products" class="nav-link">
+                <i class="nav-icon fas fa-user text-yellow"></i>
+                <p>Shopping</p>
               </router-link>
             </li>
 
