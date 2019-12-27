@@ -88,18 +88,18 @@
 
             <li class="nav-item">
               <router-link to="/products" class="nav-link">
-                <i class="nav-icon fas fa-user text-yellow"></i>
+                <i class="nav-icon fas fa-shopping-cart text-yellow"></i>
                 <p>Shopping</p>
               </router-link>
             </li>
 
             @can('isAdmin')
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <router-link to="/developer" class="nav-link">
                 <i class="nav-icon fas fa-cogs text-orange"></i>
                 <p>Developer</p>
               </router-link>
-            </li>
+            </li> --}}
             
             <li class="nav-item has-treeview">
               <a href="#" class="nav-link">

@@ -2149,6 +2149,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2173,12 +2189,12 @@ __webpack_require__.r(__webpack_exports__);
       this.form.reset();
       $('#addNew').modal('show');
     },
-    // editModal(product) {
-    //     this.editMode = true
-    //     this.form.reset()
-    //     $('#addNew').modal('show')
-    //     // this.form.fill(product)
-    // },
+    editModal: function editModal(product) {
+      this.editMode = true;
+      this.form.reset();
+      $('#addNew').modal('show');
+      this.form.fill(product);
+    },
     loadProducts: function loadProducts() {
       var _this = this;
 
@@ -2239,7 +2255,47 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
-    updateProduct: function updateProduct() {},
+    updateProduct: function updateProduct() {
+      var _this5 = this;
+
+      this.$Progress.start();
+      this.form.put('api/product/' + this.form.id).then(function () {
+        $('#addNew').modal('hide');
+
+        _this5.$Progress.finish();
+
+        Toast.fire({
+          type: 'success',
+          title: 'Product updated successfully'
+        }); // Call event
+
+        Fire.$emit('AfterModify');
+      })["catch"](function () {
+        _this5.$Progress.fail();
+      });
+    },
+    deleteProduct: function deleteProduct(id) {
+      var _this6 = this;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          _this6.form["delete"]('api/product/' + id).then(function () {
+            Swal.fire('Deleted!', 'Product has been deleted.', 'success');
+            Fire.$emit('AfterModify');
+          })["catch"](function () {
+            Swal.fire('Oobs...', 'Product hasn not been deleted!', 'error');
+          });
+        }
+      });
+    },
     getProImgPath: function getProImgPath(pic) {
       // console.log(pic)
       var product_pic = "/img/products/" + pic;
@@ -2247,14 +2303,14 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this7 = this;
 
     this.$Progress.start();
     this.loadProducts();
     this.$Progress.finish(); // Create event
 
     Fire.$on('AfterModify', function () {
-      return _this5.loadProducts();
+      return _this7.loadProducts();
     });
   }
 });
@@ -45173,7 +45229,51 @@ var render = function() {
                       _vm._v(" "),
                       _c("p", { staticClass: "price" }, [
                         _vm._v("$" + _vm._s(pro.price))
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _vm.$gate.isAdminOrAuthor()
+                        ? _c("div", { staticClass: "row upd" }, [
+                            _c("div", { staticClass: "col col-sm-6" }, [
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.editModal(pro)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-edit" }),
+                                  _vm._v(
+                                    " Edit\n                                            "
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col col-sm-6" }, [
+                              _c(
+                                "a",
+                                {
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteProduct(pro.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-trash" }),
+                                  _vm._v(
+                                    " Delete\n                                            "
+                                  )
+                                ]
+                              )
+                            ])
+                          ])
+                        : _vm._e()
                     ]
                   )
                 }),
@@ -45926,7 +46026,7 @@ var render = function() {
                           staticClass: "col-sm-12 control-label",
                           attrs: { for: "password" }
                         },
-                        [_vm._v("Passport (leave empty if not changing)")]
+                        [_vm._v("Password (leave empty if not changing)")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -45949,7 +46049,7 @@ var render = function() {
                             attrs: {
                               type: "password",
                               id: "password",
-                              placeholder: "Passport"
+                              placeholder: "Password"
                             },
                             domProps: { value: _vm.form.password },
                             on: {

@@ -37267,3 +37267,17 @@ readers do not read off random characters that represent icons */
   margin: 0;
 }
 
+.single-product .upd .col {
+  padding: 4px;
+  transition: all 0.3s;
+}
+
+.single-product .upd .col a {
+  color: #4d05e8;
+}
+
+.single-product .upd .col a:hover {
+  text-decoration: none;
+  opacity: 0.6;
+}
+

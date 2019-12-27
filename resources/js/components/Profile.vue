@@ -104,10 +104,10 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="password" class="col-sm-12 control-label">Passport (leave empty if not changing)</label>
+                                        <label for="password" class="col-sm-12 control-label">Password (leave empty if not changing)</label>
 
                                         <div class="col-sm-12">
-                                            <input type="password" v-model="form.password" class="form-control" id="password" placeholder="Passport" :class="{ 'is-invalid': form.errors.has('password') }">
+                                            <input type="password" v-model="form.password" class="form-control" id="password" placeholder="Password" :class="{ 'is-invalid': form.errors.has('password') }">
                                             <has-error :form="form" field="password"></has-error>
                                         </div>
                                     </div>

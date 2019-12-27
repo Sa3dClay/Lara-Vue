@@ -17,6 +17,7 @@ $fa-font-path: "../webfonts";
 .router-link-exact-active {
     background-color: #3490dc !important;
     color: #fff !important;
+    
     i {
         color: #fff !important;
     }
@@ -67,6 +68,20 @@ $fa-font-path: "../webfonts";
         color: #fff;
         padding: 4px;
         margin: 0;
+    }
+
+    .upd {
+        .col {
+            padding: 4px;
+            transition: all 0.3s;
+            a {
+                color: rgba(77, 5, 232, 1);
+                &:hover {
+                    text-decoration: none;
+                    opacity: 0.6;
+                }
+            }
+        }
     }
 
 }

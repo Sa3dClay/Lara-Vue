@@ -35,6 +35,22 @@
 
                                     <hr style="margin: 4px 0">
                                     <p class="price">${{ pro.price }}</p>
+                                    
+                                    <!-- Update and delete -->
+                                    <div class="row upd" v-if="$gate.isAdminOrAuthor()">
+                                        <div class="col col-sm-6">
+                                            <a href="#" @click="editModal(pro)">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </a>
+                                        </div>
+
+                                        <div class="col col-sm-6">
+                                            <a href="#" @click="deleteProduct(pro.id)">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </a>
+                                        </div>
+                                    </div><!-- End of update -->
+
                                 </div>
 
                             </div>
@@ -167,14 +183,14 @@
                 $('#addNew').modal('show')
             },
 
-            // editModal(product) {
-            //     this.editMode = true
+            editModal(product) {
+                this.editMode = true
 
-            //     this.form.reset()
-            //     $('#addNew').modal('show')
+                this.form.reset()
+                $('#addNew').modal('show')
 
-            //     // this.form.fill(product)
-            // },
+                this.form.fill(product)
+            },
 
             loadProducts() {
                 axios.get("api/product")
@@ -235,14 +251,66 @@
             },
 
             updateProduct() {
+                this.$Progress.start()
 
+                this.form.put('api/product/'+this.form.id)
+                    .then(() => {
+                        $('#addNew').modal('hide')
+
+                        this.$Progress.finish()
+
+                        Toast.fire({
+                            type: 'success',
+                            title: 'Product updated successfully'
+                        })
+
+                        // Call event
+                        Fire.$emit('AfterModify')
+                    })
+                    .catch(() => {
+                        this.$Progress.fail()
+                    })
+            },
+
+            deleteProduct(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+
+                    if (result.value) {
+
+                        this.form.delete('api/product/'+id)
+                            .then(() => {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Product has been deleted.',
+                                    'success'
+                                )
+
+                                Fire.$emit('AfterModify')
+                            })
+                            .catch(() => {
+                                Swal.fire(
+                                    'Oobs...',
+                                    'Product hasn not been deleted!',
+                                    'error'
+                                )
+                            })
+                    }
+                })
             },
 
             getProImgPath(pic) {
                 // console.log(pic)
                 let product_pic = "/img/products/" + pic                
                 return product_pic
-            }
+            },
         },
 
         created() {

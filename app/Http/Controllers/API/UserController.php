@@ -158,7 +158,7 @@ class UserController extends Controller
         } else {
             $user->delete();
         
-            return ['message' => 'User deleted successfuly'];
+            return ['message' => 'User deleted successfully'];
         }
 
         // $user->delete();
