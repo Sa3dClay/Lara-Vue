@@ -45854,7 +45854,7 @@ var render = function() {
                       _c(
                         "label",
                         {
-                          staticClass: "col-sm-2 control-label",
+                          staticClass: "col-sm-12 control-label",
                           attrs: { for: "inputName" }
                         },
                         [_vm._v("Name")]
@@ -45905,7 +45905,7 @@ var render = function() {
                       _c(
                         "label",
                         {
-                          staticClass: "col-sm-2 control-label",
+                          staticClass: "col-sm-12 control-label",
                           attrs: { for: "inputEmail" }
                         },
                         [_vm._v("Email")]
@@ -45956,7 +45956,7 @@ var render = function() {
                       _c(
                         "label",
                         {
-                          staticClass: "col-sm-2 control-label",
+                          staticClass: "col-sm-12 control-label",
                           attrs: { for: "inputExperience" }
                         },
                         [_vm._v("Experience")]
@@ -46004,7 +46004,7 @@ var render = function() {
                       _c(
                         "label",
                         {
-                          staticClass: "col-sm-2 control-label",
+                          staticClass: "col-sm-12 control-label",
                           attrs: { for: "photo" }
                         },
                         [_vm._v("Profile")]

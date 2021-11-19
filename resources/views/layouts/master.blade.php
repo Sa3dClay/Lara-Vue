@@ -163,14 +163,16 @@
     <!-- Main Footer -->
     <footer class="main-footer">
       <!-- To the right -->
-      <div class="float-right d-none d-sm-inline">
+      <div class="float-right d-none d-sm-block">
         <button class="btn btn-success" @click.prevent="printMe" style="margin-right: 8px;">
           <i class="fa fa-print"></i> Print
         </button>
         Anything you want
       </div>
       <!-- Default to the left -->
-      <strong>Copyright &copy; 2019-2020 <a href="#">Abod</a>.</strong> All rights reserved.
+      <p class="pt-2">
+        <strong>Copyright &copy; 2019-2020 <a href="#">Abod</a>.</strong> All rights reserved.
+      </p>
     </footer>
   </div>
   <!-- ./wrapper -->

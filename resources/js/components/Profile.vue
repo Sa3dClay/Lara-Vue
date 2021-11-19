@@ -70,7 +70,7 @@
                             <div class="tab-pane active" id="settings">
                                 <form class="form-horizontal">
                                     <div class="form-group">
-                                        <label for="inputName" class="col-sm-2 control-label">Name</label>
+                                        <label for="inputName" class="col-sm-12 control-label">Name</label>
 
                                         <div class="col-sm-12">
                                             <input type="text" v-model="form.name" class="form-control" id="inputName" placeholder="Name" :class="{ 'is-invalid': form.errors.has('name') }">
@@ -79,7 +79,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                                        <label for="inputEmail" class="col-sm-12 control-label">Email</label>
 
                                         <div class="col-sm-12">
                                             <input type="email" v-model="form.email" class="form-control" id="inputEmail" placeholder="Email" :class="{ 'is-invalid': form.errors.has('email') }">
@@ -88,7 +88,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
+                                        <label for="inputExperience" class="col-sm-12 control-label">Experience</label>
 
                                         <div class="col-sm-12">
                                             <textarea class="form-control" v-model="form.bio" id="inputExperience" placeholder="Bio" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
@@ -97,7 +97,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="photo" class="col-sm-2 control-label">Profile</label>
+                                        <label for="photo" class="col-sm-12 control-label">Profile</label>
                                         <div class="col-sm-12">
                                             <input type="file" @change="encodePic" id="photo" name="photo" class="form-input">
                                         </div>
